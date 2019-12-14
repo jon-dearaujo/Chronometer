@@ -51,20 +51,6 @@ class TimeViewModel: AndroidViewModel {
                 Log.i("TimeViewModel", "Current value: ${time.value}")
             }
         }, 1000, 1000)
-
-//        val inputData = workDataOf(TimeWorker.KEY to time.value!!)
-//        request = PeriodicWorkRequestBuilder<TimeWorker>(1, TimeUnit.SECONDS)
-//            .setInitialDelay(1, TimeUnit.SECONDS)
-//            .setInputData(inputData)
-//            .build()
-//
-//        val workManager = WorkManager.getInstance(getApplication())
-//        workManager.getWorkInfoByIdLiveData(request.id).observeForever( Observer { workInfo ->
-//            if (workInfo != null && workInfo.state == WorkInfo.State.SUCCEEDED) {
-//                time.value = workInfo.outputData.getLong(TimeWorker.KEY, 0)
-//            }
-//        })
-//        workManager.enqueue(request)
     }
 
     private fun tierDownWorker() {
