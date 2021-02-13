@@ -1,13 +1,15 @@
 package com.prodevquicktips.chronometer
 
 import android.app.Application
-import android.os.Handler
 import android.util.Log
-import androidx.lifecycle.*
-import androidx.work.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
+
 import com.prodevquicktips.chronometer.parser.TimeParser
-import java.util.*
-import java.util.concurrent.TimeUnit
+import java.util.Timer
+import java.util.TimerTask
 
 class TimeViewModel: AndroidViewModel {
     val timeText: LiveData<String>
@@ -18,21 +20,24 @@ class TimeViewModel: AndroidViewModel {
     private var initialTime: Long = 20 * 60 * 1000
 
     constructor(application: Application): super(application) {
-        timeText = Transformations.map(time) {
-            TimeParser.parse(it)
+        timeText = Transformations.map(time) {numericTime ->
+            TimeParser.parse(numericTime)
         }
         time.value = initialTime
         timerState.value = State.STOPPED
+        Log.i("TimeViewModel", "TimeViewModel started")
     }
 
     fun start() {
         setupWorker()
         timerState.value = State.RUNNING
+        Log.i("TimeViewModel", "TimeViewModel start invoked")
     }
 
     fun stop() {
         tierDownWorker()
         timerState.value = State.STOPPED
+        Log.i("TimeViewModel", "TimeViewModel stop invoked")
     }
 
     fun restart() {
@@ -50,7 +55,7 @@ class TimeViewModel: AndroidViewModel {
                 time.postValue(time.value!!.minus(1000))
                 Log.i("TimeViewModel", "Current value: ${time.value}")
             }
-        }, 1000, 1000)
+        }, 0, 1000)
     }
 
     private fun tierDownWorker() {
